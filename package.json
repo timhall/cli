@@ -1,0 +1,32 @@
+{
+  "name": "@timhall/cli",
+  "version": "0.0.0",
+  "author": "Tim Hall <tim.hall.engr@gmail.com>",
+  "description": "Composable CLI utilities",
+  "repository": "https://github.com/timhall/cli",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 100
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@babel/preset-typescript": "^7.7.7",
+    "@rollup/plugin-commonjs": "^11.0.0",
+    "@rollup/plugin-json": "^4.0.1",
+    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@rollup/plugin-typescript": "^2.0.1",
+    "babel-plugin-macros": "^2.8.0",
+    "jest": "^24.9.0",
+    "prettier": "^1.19.1",
+    "rollup": "^1.27.14",
+    "rollup-plugin-babel": "^4.3.3",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.4"
+  }
+}
