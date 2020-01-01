@@ -32,6 +32,7 @@
     "@rollup/plugin-json": "^4.0.1",
     "@rollup/plugin-node-resolve": "^6.0.0",
     "@rollup/plugin-typescript": "^2.0.1",
+    "@timhall/dedent": "^0.8.1",
     "@types/jest": "^24.0.25",
     "babel-plugin-dynamic-import-node-babel-7": "^2.0.7",
     "babel-plugin-macros": "^2.8.0",
@@ -41,5 +42,9 @@
     "rollup-plugin-babel": "^4.3.3",
     "tslib": "^1.10.0",
     "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "meant": "^1.0.1",
+    "mri": "^1.1.4"
   }
 }
