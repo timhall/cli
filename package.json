@@ -23,6 +23,11 @@
     "testEnvironment": "node",
     "testRegex": "(/__tests__/.*|(\\.|/)(test))\\.(js|ts)$"
   },
+  "dependencies": {
+    "ansi-colors": "^4.1.1",
+    "meant": "^1.0.1",
+    "mri": "^1.1.4"
+  },
   "devDependencies": {
     "@babel/core": "^7.7.7",
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
@@ -42,9 +47,5 @@
     "rollup-plugin-babel": "^4.3.3",
     "tslib": "^1.10.0",
     "typescript": "^3.7.4"
-  },
-  "dependencies": {
-    "meant": "^1.0.1",
-    "mri": "^1.1.4"
   }
 }
