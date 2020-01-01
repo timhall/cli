@@ -5,11 +5,15 @@
   "description": "Composable CLI utilities",
   "repository": "https://github.com/timhall/cli",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.es.js",
   "scripts": {
     "build": "rollup -c",
     "test": "jest"
   },
+  "files": [
+    "lib/*"
+  ],
   "prettier": {
     "singleQuote": true,
     "printWidth": 100
