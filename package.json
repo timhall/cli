@@ -13,7 +13,8 @@
     "test": "jest"
   },
   "files": [
-    "lib/*"
+    "lib/*",
+    "cli.d.ts"
   ],
   "prettier": {
     "singleQuote": true,
