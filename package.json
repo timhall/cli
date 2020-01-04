@@ -5,8 +5,9 @@
   "description": "Composable CLI utilities",
   "repository": "https://github.com/timhall/cli",
   "license": "MIT",
-  "main": "lib/index.cjs.js",
-  "module": "lib/index.es.js",
+  "main": "lib/cli.cjs.js",
+  "module": "lib/cli.es.js",
+  "types": "cli.d.ts",
   "scripts": {
     "build": "rollup -c",
     "test": "jest"

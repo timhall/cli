@@ -1,4 +1,4 @@
-const { run } = require('../../lib');
+const { run } = require('../../lib/cli.cjs');
 
 run(async () => {
   const argv = process.argv.slice(2);

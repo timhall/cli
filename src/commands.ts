@@ -9,7 +9,7 @@ export interface Commands {
   run: RunCommands;
 }
 
-type Subcommand = (argv: string[]) => Promise<void>;
+export type Subcommand = (argv: string[]) => Promise<void>;
 type ImportSubcommand = () => Promise<Subcommand | { default: Subcommand }>;
 type SubcommandDetails = { command: ImportSubcommand; description?: string };
 
