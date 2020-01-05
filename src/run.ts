@@ -1,5 +1,5 @@
 import { redBright } from 'ansi-colors';
-import cleanError from './clean-error';
+import { cleanError } from './errors';
 
 type RunFn = () => void | Promise<void>;
 
