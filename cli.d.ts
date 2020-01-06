@@ -1,20 +1,35 @@
 declare module '@timhall/cli' {
-  type RunCommands = (argv: string[], help?: string) => Promise<void>;
+  type Run = (argv: string[], help?: string) => Promise<void>;
 
   export interface Commands {
-    help: string;
-    run: RunCommands;
+    list: string;
+    run: Run;
   }
 
   export type Subcommand = (argv: string[]) => Promise<void>;
   type ImportSubcommand = () => Promise<Subcommand | { default: Subcommand }>;
-  type SubcommandDetails = { command: ImportSubcommand; description?: string };
+  type SubcommandDetails =
+    | { load: ImportSubcommand; run?: undefined; description?: string }
+    | { run: Subcommand; load?: undefined; description?: string };
 
   export interface Subcommands {
-    [name: string]: ImportSubcommand | SubcommandDetails;
+    [name: string]: SubcommandDetails;
   }
 
-  export function commands(name: string, version: string, subcommands: Subcommands): Commands;
+  export function commands(subcommands: Subcommands): Commands;
+
+  export interface CliOptions {
+    name: string;
+    version: string;
+    subcommands: Commands;
+  }
+
+  export interface Cli {
+    help: string;
+    run: Run;
+  }
+
+  export function cli(options: CliOptions): Cli;
 
   type RunFn = () => void | Promise<void>;
 
