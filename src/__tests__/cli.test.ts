@@ -14,9 +14,10 @@ const help = dedent`
     - b        B ...
     - failing  Failing ...
 
-  test help <command>  Help on <command>
-  test -v / --version  Show current version
-`;
+  test help <command>  Show help for <command>
+  test -h, --help      Show usage information
+  test -v, --version   Show current version
+  `;
 
 const subcommands = commands({
   a: { load: () => import('../__fixtures__/test-a'), description: 'A ...' },

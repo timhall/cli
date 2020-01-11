@@ -12,12 +12,7 @@ const subcommands = commands({
   }
 });
 
-const list = dedent`
-  Commands:
-    - a        A ...
-    - b        B ...
-    - failing  Failing ...
-`;
+const list = { a: 'A ...', b: 'B ...', failing: 'Failing ...' };
 
 describe('list', () => {
   it('should create formatted list of commands', () => {

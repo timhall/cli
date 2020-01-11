@@ -1,12 +1,16 @@
 declare module '@timhall/cli' {
   type Run = (argv: string[], help?: string) => Promise<void>;
+  interface CommandList {
+    [name: string]: string;
+  }
 
   export interface Commands {
-    list: string;
+    list: CommandList;
     run: Run;
   }
 
   export type Subcommand = (argv: string[]) => Promise<void>;
+
   type ImportSubcommand = () => Promise<Subcommand | { default: Subcommand }>;
   type SubcommandDetails =
     | { load: ImportSubcommand; run?: undefined; description?: string }

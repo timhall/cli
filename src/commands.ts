@@ -1,15 +1,18 @@
 import dedent from '@timhall/dedent/macro';
-import meant from 'meant';
 import { ErrorCode } from './errors';
 
+export interface CommandList {
+  [name: string]: string;
+}
 export type Run = (argv: string[], help?: string) => Promise<void>;
 
 export interface Commands {
-  list: string;
-  run: (argv: string[]) => Promise<void>;
+  list: CommandList;
+  run: Run;
 }
 
 export type Subcommand = (argv: string[]) => Promise<void>;
+
 type LoadSubcommand = () => Promise<Subcommand | { default: Subcommand }>;
 type SubcommandDetails =
   | { load: LoadSubcommand; run?: undefined; description?: string }
@@ -20,20 +23,10 @@ export interface Subcommands {
 }
 
 export default function commands(subcommands: Subcommands): Commands {
-  // Create subcommand list with consistent alignment
-  const name_width = Object.keys(subcommands)
-    .map(name => name.length)
-    .reduce(max);
-
-  const subcommand_list = Object.entries(subcommands).map(
-    ([name, value]) => `  - ${name.padEnd(name_width + 2)}${value.description || ''}`
-  );
-
-  // Generate default help that can be extended / overridden in run
-  const list = dedent`
-    Commands:
-    ${subcommand_list.join('\n')}
-  `;
+  const list: CommandList = {};
+  for (const [name, value] of Object.entries(subcommands)) {
+    list[name] = value.description || '';
+  }
 
   const run = generateRun(subcommands);
 
@@ -48,6 +41,9 @@ function generateRun(subcommands: Subcommands): Run {
     // Unknown command
     const available_subcommands = Object.keys(subcommands);
     if (!subcommand_name || !available_subcommands.includes(subcommand_name)) {
+      type Meant = (value: string, possible: string[]) => string[];
+      const meant = ((await import('meant')) as unknown) as Meant;
+
       const approximate = meant(subcommand_name, available_subcommands);
       const did_you_mean = approximate.length ? `, did you mean "${approximate[0]}"?` : '.';
 
@@ -88,10 +84,6 @@ function isLoad(
   details: SubcommandDetails
 ): details is { load: LoadSubcommand; run?: undefined; description?: string } {
   return typeof details.load === 'function';
-}
-
-function max(current = 0, value: number): number {
-  return Math.max(current, value);
 }
 
 function quoted(value: string): string {

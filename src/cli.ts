@@ -23,10 +23,11 @@ export default function cli(options: CliOptions): Cli {
 
     Usage: ${name} <command>
 
-    ${subcommands.list}
+    ${commandList(subcommands.list)}
 
-    ${name} help <command>  Help on <command>
-    ${name} -v / --version  Show current version
+    ${name} help <command>  Show help for <command>
+    ${name} -h, --help      Show usage information
+    ${name} -v, --version   Show current version
   `;
 
   const run = generateRun(name, version, subcommands, help);
@@ -74,10 +75,36 @@ function generateRun(
       await subcommands.run(argv);
     } catch (error) {
       if (isErrorCode(error) && error.code === 'unknown-command') {
-        editErrorMessage(error, message => (message += `\nTry "test help" for more information.`));
+        editErrorMessage(
+          error,
+          message => (message += `\nTry "${name} help" for more information.`)
+        );
       }
 
       throw error;
     }
   };
+}
+
+function commandList(commands: { [name: string]: string }): string {
+  // Create subcommand list with consistent alignment
+  const name_width = Object.keys(commands)
+    .map(name => name.length)
+    .reduce(max);
+
+  const subcommand_list = Object.entries(commands).map(
+    ([name, description]) => `  - ${name.padEnd(name_width + 2)}${description || ''}`
+  );
+
+  // Generate default help that can be extended / overridden in run
+  const list = dedent`
+    Commands:
+    ${subcommand_list.join('\n')}
+  `;
+
+  return list;
+}
+
+function max(current = 0, value: number): number {
+  return Math.max(current, value);
 }
