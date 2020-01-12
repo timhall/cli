@@ -9,7 +9,7 @@ declare module '@timhall/cli' {
     run: Run;
   }
 
-  export type Subcommand = (argv: string[]) => Promise<void>;
+  export type Subcommand = (argv: string[]) => void | Promise<void>;
 
   type ImportSubcommand = () => Promise<Subcommand | { default: Subcommand }>;
   type SubcommandDetails =
