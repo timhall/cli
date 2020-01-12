@@ -1,4 +1,4 @@
-import { redBright } from 'ansi-colors';
+import { redBright } from '@timhall/ansi-colors';
 import { cleanError } from './errors';
 
 type RunFn = () => void | Promise<void>;
