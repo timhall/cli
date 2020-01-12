@@ -17,7 +17,18 @@ const help = dedent`
   test help <command>  Show help for <command>
   test -h, --help      Show usage information
   test -v, --version   Show current version
-  `;
+`;
+const help_without_version = dedent`
+  Usage: test <command>
+
+  Commands:
+    - a        A ...
+    - b        B ...
+    - failing  Failing ...
+
+  test help <command>  Show help for <command>
+  test -h, --help      Show usage information
+`;
 
 const subcommands = commands({
   a: { load: () => import('../__fixtures__/test-a'), description: 'A ...' },
@@ -39,30 +50,35 @@ describe('help', () => {
 
 describe('run', () => {
   it('should show help for no argv', async () => {
-    const result = await runSubcommands(subcommands, []);
+    const result = await runSubcommands({ subcommands }, []);
     expect(result).toEqual(help);
   });
 
   it('should show version for -v / --version', async () => {
-    const result = await runSubcommands(subcommands, ['--version']);
+    const result = await runSubcommands({ subcommands }, ['--version']);
     expect(result).toEqual(version);
 
-    const shorthand_result = await runSubcommands(subcommands, ['-v']);
+    const shorthand_result = await runSubcommands({ subcommands }, ['-v']);
     expect(shorthand_result).toEqual(version);
   });
 
+  it('should handle no version', async () => {
+    const result = await runSubcommands({ subcommands, version: null }, ['--help']);
+    expect(result).toEqual(help_without_version);
+  });
+
   it('should show help for no command', async () => {
-    const result = await runSubcommands(subcommands, ['--help']);
+    const result = await runSubcommands({ subcommands }, ['--help']);
     expect(result).toEqual(help);
   });
 
   it('should show help for help with no command', async () => {
-    const result = await runSubcommands(subcommands, ['help']);
+    const result = await runSubcommands({ subcommands }, ['help']);
     expect(result).toEqual(help);
   });
 
   it('should handle unknown command', async () => {
-    await expect(runSubcommands(subcommands, ['ab'])).rejects.toThrow(
+    await expect(runSubcommands({ subcommands }, ['ab'])).rejects.toThrow(
       new Error(dedent`
         Unknown command "ab", did you mean "a"?
 
@@ -73,7 +89,7 @@ describe('run', () => {
   });
 
   it('should handle command failing to load', async () => {
-    await expect(runSubcommands(subcommands, ['failing'])).rejects.toThrow(
+    await expect(runSubcommands({ subcommands }, ['failing'])).rejects.toThrow(
       new Error(dedent`
         Failed to load command "failing".
 
@@ -83,28 +99,29 @@ describe('run', () => {
   });
 
   it('should run subcommand with argv', async () => {
-    const result = await runSubcommands(subcommands, ['a', '--option', 'value']);
+    const result = await runSubcommands({ subcommands }, ['a', '--option', 'value']);
     expect(result).toEqual(`a ["--option","value"]`);
   });
 
   it('should run help for subcommand', async () => {
-    const result = await runSubcommands(subcommands, ['help', 'b']);
+    const result = await runSubcommands({ subcommands }, ['help', 'b']);
     expect(result).toEqual(`b ["--help"]`);
   });
 
   it('should allow custom help', async () => {
-    const result = await runSubcommands(subcommands, [], 'custom help');
+    const result = await runSubcommands({ subcommands }, [], 'custom help');
     expect(result).toEqual(`custom help`);
   });
 });
 
 async function runSubcommands(
-  subcommands: Commands,
+  options: { subcommands: Commands; version?: string | null },
   argv: string[],
   help?: string
 ): Promise<string> {
   const spy = jest.spyOn(global.console, 'log').mockImplementation();
-  const test = cli({ name, version, subcommands });
+  const { subcommands, version: _version = version } = options;
+  const test = cli({ name, version: _version ? _version : undefined, subcommands });
 
   try {
     await test.run(argv, help);

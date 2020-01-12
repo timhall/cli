@@ -5,7 +5,7 @@ import { editErrorMessage, isErrorCode } from './errors';
 
 interface CliOptions {
   name: string;
-  version: string;
+  version?: string;
   subcommands: Commands;
 }
 
@@ -19,15 +19,14 @@ export default function cli(options: CliOptions): Cli {
 
   // Generate default help that can be extended / overridden in run
   const help = dedent`
-    ${name} v${version}
-
-    Usage: ${name} <command>
+    ${version ? `${name} v${version}\n\n` : ''}Usage: ${name} <command>
 
     ${commandList(subcommands.list)}
 
     ${name} help <command>  Show help for <command>
-    ${name} -h, --help      Show usage information
-    ${name} -v, --version   Show current version
+    ${name} -h, --help      Show usage information${
+    version ? `\n${name} -v, --version   Show current version` : ''
+  }
   `;
 
   const run = generateRun(name, version, subcommands, help);
@@ -37,7 +36,7 @@ export default function cli(options: CliOptions): Cli {
 
 function generateRun(
   name: string,
-  version: string,
+  version: string | undefined,
   subcommands: Commands,
   default_help: string
 ): Run {
@@ -47,7 +46,7 @@ function generateRun(
 
     // <name> -v, --version, or anything else
     if (!subcommand_name) {
-      if (args.version) {
+      if (version && args.version) {
         console.log(version);
       } else {
         console.log(help);

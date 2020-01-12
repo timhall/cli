@@ -24,7 +24,7 @@ declare module '@timhall/cli' {
 
   export interface CliOptions {
     name: string;
-    version: string;
+    version?: string;
     subcommands: Commands;
   }
 
