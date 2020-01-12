@@ -42,7 +42,9 @@ function generateRun(subcommands: Subcommands): Run {
     const available_subcommands = Object.keys(subcommands);
     if (!subcommand_name || !available_subcommands.includes(subcommand_name)) {
       type Meant = (value: string, possible: string[]) => string[];
-      const meant = ((await import('meant')) as unknown) as Meant;
+      const __default = (exports: any) => ('default' in exports ? exports.default : exports);
+
+      const meant = __default(await import('meant')) as Meant;
 
       const approximate = meant(subcommand_name, available_subcommands);
       const did_you_mean = approximate.length ? `, did you mean "${approximate[0]}"?` : '.';
