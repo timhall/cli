@@ -42,7 +42,7 @@ example -v / --version  Show current version
 (calls init.run with ['--help'])
 
 > example int
-Unknown command "int", did you mean "init"?
+ERROR Unknown command "int", did you mean "init"?
 
 Available commands are "init" and "commit".
 Try "example help" for more information.
@@ -82,9 +82,10 @@ const subcommands = commands({
 });
 
 console.log(subcommands.list);
-// Commands:
-//   - init    Initialize a new repository
-//   - commit  Commit change to repository
+// {
+//   init: 'Initialize a new repository',
+//   commit: 'Commit change to repository'
+// }
 
 async function main() {
   await subcommands.run(['commit', '-m', 'Added cli']);
